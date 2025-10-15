@@ -2,8 +2,40 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import Icon from "@/components/ui/icon";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
+import { useToast } from "@/hooks/use-toast";
+import { useState } from "react";
 
 const Index = () => {
+  const { toast } = useToast();
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    event: "",
+    message: ""
+  });
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    toast({
+      title: "Заявка отправлена!",
+      description: "Мы свяжемся с вами в ближайшее время.",
+    });
+    setIsDialogOpen(false);
+    setFormData({
+      name: "",
+      email: "",
+      phone: "",
+      event: "",
+      message: ""
+    });
+  };
   const exhibitions = [
     {
       id: 1,
@@ -196,9 +228,84 @@ const Index = () => {
                       </div>
                     </div>
                   </div>
-                  <Button variant="outline">
-                    Подробнее
-                  </Button>
+                  <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                    <DialogTrigger asChild>
+                      <Button variant="outline">
+                        Записаться
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="sm:max-w-[500px]">
+                      <DialogHeader>
+                        <DialogTitle className="text-2xl">Регистрация на мероприятие</DialogTitle>
+                      </DialogHeader>
+                      <form onSubmit={handleSubmit} className="space-y-4 mt-4">
+                        <div className="space-y-2">
+                          <Label htmlFor="name">Имя *</Label>
+                          <Input
+                            id="name"
+                            required
+                            value={formData.name}
+                            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                            placeholder="Иван Иванов"
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="email">Email *</Label>
+                          <Input
+                            id="email"
+                            type="email"
+                            required
+                            value={formData.email}
+                            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                            placeholder="example@mail.ru"
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="phone">Телефон *</Label>
+                          <Input
+                            id="phone"
+                            type="tel"
+                            required
+                            value={formData.phone}
+                            onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                            placeholder="+7 (999) 123-45-67"
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="event">Мероприятие *</Label>
+                          <Select
+                            required
+                            value={formData.event}
+                            onValueChange={(value) => setFormData({ ...formData, event: value })}
+                          >
+                            <SelectTrigger>
+                              <SelectValue placeholder="Выберите мероприятие" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {events.map((event) => (
+                                <SelectItem key={event.id} value={event.title}>
+                                  {event.title} - {event.date}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="message">Комментарий</Label>
+                          <Textarea
+                            id="message"
+                            value={formData.message}
+                            onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                            placeholder="Дополнительная информация..."
+                            rows={3}
+                          />
+                        </div>
+                        <Button type="submit" className="w-full" size="lg">
+                          Отправить заявку
+                        </Button>
+                      </form>
+                    </DialogContent>
+                  </Dialog>
                 </CardContent>
               </Card>
             ))}
