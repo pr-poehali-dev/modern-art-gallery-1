@@ -13,6 +13,7 @@ import { useState } from "react";
 const Index = () => {
   const { toast } = useToast();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [selectedImage, setSelectedImage] = useState<number | null>(null);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -100,6 +101,63 @@ const Index = () => {
     }
   ];
 
+  const artworks = [
+    {
+      id: 1,
+      title: "Цветные метаморфозы",
+      artist: "Анна Соколова",
+      year: "2025",
+      image: "https://cdn.poehali.dev/projects/5382062a-88fe-4868-a0a4-ed613401b159/files/27b78921-62cd-4e84-adf1-fb24f983536f.jpg"
+    },
+    {
+      id: 2,
+      title: "Абстрактный экспрессионизм",
+      artist: "Дмитрий Волков",
+      year: "2025",
+      image: "https://cdn.poehali.dev/projects/5382062a-88fe-4868-a0a4-ed613401b159/files/363a4a70-de58-4879-9c5e-22d0f3a1d116.jpg"
+    },
+    {
+      id: 3,
+      title: "Геометрия пространства",
+      artist: "Екатерина Петрова",
+      year: "2024",
+      image: "https://cdn.poehali.dev/projects/5382062a-88fe-4868-a0a4-ed613401b159/files/95d20889-dbef-46cb-a9a9-97092b9db04f.jpg"
+    },
+    {
+      id: 4,
+      title: "Сюрреалистические миры",
+      artist: "Анна Соколова",
+      year: "2024",
+      image: "https://cdn.poehali.dev/projects/5382062a-88fe-4868-a0a4-ed613401b159/files/bf253c74-beb4-43cc-8aab-5e9546b493eb.jpg"
+    },
+    {
+      id: 5,
+      title: "Внутренние пейзажи",
+      artist: "Дмитрий Волков",
+      year: "2025",
+      image: "https://cdn.poehali.dev/projects/5382062a-88fe-4868-a0a4-ed613401b159/files/d6ad5455-e0cc-482b-b635-19b604428d45.jpg"
+    },
+    {
+      id: 6,
+      title: "Ритмы цвета",
+      artist: "Екатерина Петрова",
+      year: "2024",
+      image: "https://cdn.poehali.dev/projects/5382062a-88fe-4868-a0a4-ed613401b159/files/27b78921-62cd-4e84-adf1-fb24f983536f.jpg"
+    }
+  ];
+
+  const handlePrevImage = () => {
+    if (selectedImage !== null) {
+      setSelectedImage(selectedImage > 0 ? selectedImage - 1 : artworks.length - 1);
+    }
+  };
+
+  const handleNextImage = () => {
+    if (selectedImage !== null) {
+      setSelectedImage(selectedImage < artworks.length - 1 ? selectedImage + 1 : 0);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-accent/10">
       <header className="fixed top-0 w-full bg-background/80 backdrop-blur-md z-50 border-b border-border">
@@ -108,6 +166,9 @@ const Index = () => {
           <div className="flex gap-8">
             <a href="#exhibitions" className="text-foreground hover:text-primary transition-colors">
               Выставки
+            </a>
+            <a href="#gallery" className="text-foreground hover:text-primary transition-colors">
+              Галерея
             </a>
             <a href="#artists" className="text-foreground hover:text-primary transition-colors">
               Художники
@@ -171,6 +232,80 @@ const Index = () => {
           </div>
         </div>
       </section>
+
+      <section id="gallery" className="py-20 px-6 bg-background/50">
+        <div className="container mx-auto max-w-6xl">
+          <div className="flex items-center gap-4 mb-12">
+            <Icon name="Image" size={36} className="text-primary" />
+            <h3 className="text-5xl font-bold">Галерея работ</h3>
+          </div>
+          <div className="grid md:grid-cols-3 gap-6">
+            {artworks.map((artwork, index) => (
+              <Card 
+                key={artwork.id} 
+                className="overflow-hidden group cursor-pointer hover:shadow-xl transition-all duration-300 animate-fade-in"
+                onClick={() => setSelectedImage(index)}
+              >
+                <div className="relative h-72 overflow-hidden">
+                  <img
+                    src={artwork.image}
+                    alt={artwork.title}
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-foreground/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end">
+                    <div className="p-4 text-background">
+                      <h4 className="font-bold text-lg">{artwork.title}</h4>
+                      <p className="text-sm">{artwork.artist}, {artwork.year}</p>
+                    </div>
+                  </div>
+                </div>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {selectedImage !== null && (
+        <Dialog open={selectedImage !== null} onOpenChange={() => setSelectedImage(null)}>
+          <DialogContent className="max-w-5xl p-0 border-0 bg-transparent">
+            <div className="relative">
+              <button
+                onClick={() => setSelectedImage(null)}
+                className="absolute -top-12 right-0 text-background hover:text-background/80 transition-colors"
+              >
+                <Icon name="X" size={32} />
+              </button>
+              <div className="relative bg-foreground/95 rounded-lg overflow-hidden">
+                <img
+                  src={artworks[selectedImage].image}
+                  alt={artworks[selectedImage].title}
+                  className="w-full h-auto max-h-[80vh] object-contain"
+                />
+                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-foreground to-transparent p-8">
+                  <h3 className="text-3xl font-bold text-background mb-2">
+                    {artworks[selectedImage].title}
+                  </h3>
+                  <p className="text-lg text-background/90">
+                    {artworks[selectedImage].artist} • {artworks[selectedImage].year}
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={handlePrevImage}
+                className="absolute left-4 top-1/2 -translate-y-1/2 bg-background/90 hover:bg-background rounded-full p-3 transition-colors"
+              >
+                <Icon name="ChevronLeft" size={32} />
+              </button>
+              <button
+                onClick={handleNextImage}
+                className="absolute right-4 top-1/2 -translate-y-1/2 bg-background/90 hover:bg-background rounded-full p-3 transition-colors"
+              >
+                <Icon name="ChevronRight" size={32} />
+              </button>
+            </div>
+          </DialogContent>
+        </Dialog>
+      )}
 
       <section id="artists" className="py-20 px-6">
         <div className="container mx-auto max-w-6xl">
