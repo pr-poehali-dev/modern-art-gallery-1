@@ -198,6 +198,105 @@ const Index = () => {
         </div>
       </section>
 
+      <section className="py-16 px-6">
+        <div className="container mx-auto max-w-6xl">
+          <Card className="bg-gradient-to-r from-primary to-accent border-0 overflow-hidden relative animate-scale-in">
+            <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iMC4xIj48cGF0aCBkPSJNMzYgMzRjMC0yLjIxLTEuNzktNC00LTRzLTQgMS43OS00IDQgMS43OSA0IDQgNCA0LTEuNzkgNC00em0wLTMwYzAtMi4yMS0xLjc5LTQtNC00cy00IDEuNzktNCA0IDEuNzkgNCA0IDQgNC0xLjc5IDQtNHpNNiAzNGMwLTIuMjEtMS43OS00LTQtNHMtNCAxLjc5LTQgNCAxLjc5IDQgNCA0IDQtMS43OSA0LTR6TTYgNGMwLTIuMjEtMS43OS00LTQtNHMtNCAxLjc5LTQgNCAxLjc5IDQgNCA0IDQtMS43OSA0LTR6Ii8+PC9nPjwvZz48L3N2Zz4=')] opacity-30"></div>
+            <CardContent className="p-12 relative z-10">
+              <div className="flex flex-col md:flex-row items-center justify-between gap-8">
+                <div className="text-center md:text-left">
+                  <h3 className="text-4xl font-bold text-primary-foreground mb-4">
+                    Станьте частью искусства
+                  </h3>
+                  <p className="text-lg text-primary-foreground/90 max-w-xl">
+                    Запишитесь на наши мероприятия: мастер-классы, открытия выставок и встречи с художниками
+                  </p>
+                </div>
+                <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                  <DialogTrigger asChild>
+                    <Button size="lg" variant="secondary" className="text-lg px-10 py-6 shadow-lg hover:shadow-xl transition-all">
+                      <Icon name="Calendar" size={20} className="mr-2" />
+                      Записаться
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-[500px]">
+                    <DialogHeader>
+                      <DialogTitle className="text-2xl">Регистрация на мероприятие</DialogTitle>
+                    </DialogHeader>
+                    <form onSubmit={handleSubmit} className="space-y-4 mt-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="name">Имя *</Label>
+                        <Input
+                          id="name"
+                          required
+                          value={formData.name}
+                          onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                          placeholder="Иван Иванов"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="email">Email *</Label>
+                        <Input
+                          id="email"
+                          type="email"
+                          required
+                          value={formData.email}
+                          onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                          placeholder="example@mail.ru"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="phone">Телефон *</Label>
+                        <Input
+                          id="phone"
+                          type="tel"
+                          required
+                          value={formData.phone}
+                          onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                          placeholder="+7 (999) 123-45-67"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="event">Мероприятие *</Label>
+                        <Select
+                          required
+                          value={formData.event}
+                          onValueChange={(value) => setFormData({ ...formData, event: value })}
+                        >
+                          <SelectTrigger>
+                            <SelectValue placeholder="Выберите мероприятие" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {events.map((event) => (
+                              <SelectItem key={event.id} value={event.title}>
+                                {event.title} - {event.date}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="message">Комментарий</Label>
+                        <Textarea
+                          id="message"
+                          value={formData.message}
+                          onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                          placeholder="Дополнительная информация..."
+                          rows={3}
+                        />
+                      </div>
+                      <Button type="submit" className="w-full" size="lg">
+                        Отправить заявку
+                      </Button>
+                    </form>
+                  </DialogContent>
+                </Dialog>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </section>
+
       <section id="events" className="py-20 px-6 bg-background/50">
         <div className="container mx-auto max-w-6xl">
           <div className="flex items-center gap-4 mb-12">
